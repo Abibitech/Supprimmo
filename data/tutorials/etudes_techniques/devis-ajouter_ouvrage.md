@@ -1,7 +1,7 @@
 # Ajouter et chiffrer des ouvrages depuis une bibliothèque
 
 **Logiciel :** BIMoffice Client  
-**Version :** 9.17.31 (version utilisée chez Primmosens, à vérifier pour ces captures)  
+**Version :** 9.17.31  
 **Catégorie :** Études techniques  
 
 ## Procédure

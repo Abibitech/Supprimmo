@@ -1,9 +1,8 @@
 # Générer des documents depuis une étude technique
 
 **Logiciel :** BIMoffice Client  
-**Version :** 9.17.31 (version utilisée chez Primmosens, à vérifier pour ces captures)  
+**Version :** 9.17.31  
 **Catégorie :** Études techniques  
-**Statut :** Tutoriel issu des notes utilisateur — à valider avant diffusion interne
 
 ## Procédure
 

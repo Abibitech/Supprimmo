@@ -78,5 +78,13 @@ nav = streamlit.navigation(
     expanded=True,
 )
 
+streamlit.session_state["pages"] = {
+        "tutorials": tutorialPage,
+        "documents": documentPage,
+        "assistant": assistantPage,
+        "support": supportPage,
+        "prix": pricePage,
+        }
+
 nav.run()
 
