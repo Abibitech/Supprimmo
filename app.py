@@ -1,3 +1,4 @@
+from pathlib import Path
 import streamlit
 
 from pages import (
@@ -15,6 +16,10 @@ streamlit.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+BASE_DIR = Path(__file__).resolve().parent
+
+streamlit.logo(str(BASE_DIR / "assets" / "Primmosens.png"), size="large")
 
 homePage = streamlit.Page(
         home.print,

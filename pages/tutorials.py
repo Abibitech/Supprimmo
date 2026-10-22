@@ -1,5 +1,6 @@
 
 import streamlit
+import unicodedata
 import re
 from pathlib import Path
 
@@ -9,6 +10,24 @@ TUTO_DIR = BASE_DIR / "data" / "tutorials"
 def getTutorials():
     files = list(TUTO_DIR.rglob("*.md"))
     return sorted(files)
+
+def searchTutorials(tutorials, search):
+    if not search.strip():
+        return tutorials
+
+    result = []
+
+    search = normalizeText(search.strip())
+
+    for file in tutorials:
+        title = file.stem.replace("_", " ").replace("-", " : ")
+        content = file.read_text(encoding="utf-8")
+        complete = normalizeText(title + " " + content)
+
+        if search in complete:
+            result.append(file)
+    return result
+
 
 def printMarkdown(content, folder):
     sep = r"!\[([^\]]*)\]\(([^)]+)\)"
@@ -32,6 +51,18 @@ def printMarkdown(content, folder):
     if remaining.strip():
         streamlit.markdown(remaining)
 
+
+def normalizeText(text):
+    text = text.casefold()
+    text = unicodedata.normalize("NFD", text)
+    text = "".join(
+        char
+        for char in text
+        if unicodedata.category(char) != "Mn"
+    )
+    return text
+
+
 def print():
     streamlit.title("Support Primmosens")
     streamlit.write("Bienvenue sur la plateforme d'assistance BIMoffice.")
@@ -41,13 +72,22 @@ def print():
         streamlit.warning("Aucun tutoriel dans la base de donnée.")
         return
 
+    search = streamlit.text_input("Rechercher dans les tutoriels", placeholder="Exemple : marge, lots, bibliothèque, prix...")
+    
+    result  = searchTutorials(tutorials, search)
+
+    streamlit.caption(f"{len(result)} tutoriel(s) trouvé(s)")
+
+    if not result:
+        streamlit.info("Aucun tutoriel ne correspond à votre recherche.")
+
     names = [ file.stem.replace("_", " ").replace("-", " : ").capitalize()
-             for file in tutorials
+             for file in result
     ]
 
     select = streamlit.selectbox(
-            "Choisir un tutoriel", options=range(len(tutorials)), format_func=lambda index: names[index],            )
-    selectedFiles = tutorials[select]
+            "Choisir un tutoriel", options=range(len(result)), format_func=lambda index: names[index],            )
+    selectedFiles = result[select]
     content = selectedFiles.read_text(encoding="utf-8")
     streamlit.divider()
     printMarkdown(content, selectedFiles.parent) 
