@@ -1,0 +1,18 @@
+# Générer des documents depuis une étude technique
+
+**Logiciel :** BIMoffice Client  
+**Version :** 9.17.31 (version utilisée chez Primmosens, à vérifier pour ces captures)  
+**Catégorie :** Études techniques  
+**Statut :** Tutoriel issu des notes utilisateur — à valider avant diffusion interne
+
+## Procédure
+
+### Étape 1
+
+Une fois mes lots complétés je peux générer des documents selon différents modèles
+
+Cliquer sur l'onglet documents dans le menu la
+
+![Capture étape 1](images/image13.png)
+
+![Capture étape 1](images/image14.png)

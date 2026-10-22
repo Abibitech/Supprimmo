@@ -1,43 +1,82 @@
 import streamlit
 
+from pages import (
+    home,
+    tutorials,
+    documents,
+    prices,
+    assistant,
+    support,
+)
+
 streamlit.set_page_config(
     page_title= "Support Primmosens",
     page_icon="❓",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded",
 )
 
-page = streamlit.sidebar.radio("Menu",
-    [
-        "Page d'accueil",
-        "Analyse de Prix",
-        "Tutoriels BIMoffice",
-        "Documents et processus",
-        "Assistant BIMoffice",
-        "Support Technique"
-    ]
+homePage = streamlit.Page(
+        home.print,
+        title="Accueil",
+        icon=":material/home:",
+        default=True,
 )
 
-if page == "Page d'accueil":
-    streamlit.title("Support Primmosens")
-    streamlit.write("Bienvenue sur la plateforme d'assistance BIMoffice.")
 
-elif page == "Analyse de Prix":
-    streamlit.title("Analyse de prix")
-    streamlit.write("Retrouvez ici les applications d'analyse de prix.")
+tutorialPage = streamlit.Page(
+        tutorials.print,
+        title="Tutoriels BIMoffice",
+        icon=":material/menu_book:",
+        url_path="tutorials",
+)
 
-elif page == "Tutoriels BIMoffice":
-    streamlit.title("Tutoriels BIMoffice")
-    streamlit.write("Retrouvez ici les différents guides d'utilisation.")
+documentPage = streamlit.Page(
+        documents.print,
+        title="Documents et Processus",
+        icon=":material/folder:",
+        url_path="documents",
+)
 
-elif page == "Documents et processus":
-    streamlit.title("Documents et processus")
-    streamlit.write("Consultez les documents et processus interne de l'entreprise")
+assistantPage = streamlit.Page(
+        assistant.print,
+        title="Assistant par message",
+        icon=":material/smart_toy:",
+        url_path="assistant",
+)
 
-elif page == "Assistant BIMoffice":
-    streamlit.title("Assistant BIMoffice")
-    streamlit.write("Posez vos questions sur le logiciel")
+supportPage = streamlit.Page(
+        support.print,
+        title="Support technique",
+        icon=":material/build:",
+        url_path="support",
+)
 
-elif page == "Support Technique":
-    streamlit.title("Support Technique")
-    streamlit.write("Retrouvez les solutions aux problèmes les plus fréquents")
+pricePage = streamlit.Page(
+        prices.print,
+        title="Analyse des prix",
+        icon=":material/bar_chart:",
+        url_path="prices",
+)
+
+nav = streamlit.navigation(
+    {
+        "Général" : [
+            homePage,
+            tutorialPage,
+            documentPage,
+        ],
+        "Outils" : [
+            assistantPage,
+            pricePage,
+        ],
+        "Assistance" : [
+            supportPage,
+        ],
+    },
+    position="sidebar",
+    expanded=True,
+)
+
+nav.run()
 
