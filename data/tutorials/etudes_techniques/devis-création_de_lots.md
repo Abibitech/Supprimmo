@@ -14,7 +14,7 @@ Ajouter des lots à une étude technique à partir d'une bibliothèque existante
 
 Dans l'onglet **Lots**, cliquez sur le bouton **« Créer depuis bibliothèque »**.
 
-![Bouton Créer depuis bibliothèque](images/image1.png)
+![Bouton Créer depuis bibliothèque](images/image8.png)
 
 ## Étape 2 — Sélectionner les lots
 
@@ -30,7 +30,7 @@ Les lots sélectionnés sont maintenant visibles dans l'onglet situé à gauche.
 
 Vous pouvez ajouter d'autres lots si nécessaire.
 
-![Lots ajoutés à l'étude](images/image3.png)
+![Lots ajoutés à l'étude](images/image12.png)
 
 ## Étape 4 — Supprimer un lot
 
@@ -39,7 +39,7 @@ Pour supprimer un lot :
 1. Faites un **clic droit** sur le lot concerné.
 2. Sélectionnez **« Supprimer »**.
 
-![Suppression d'un lot](images/image4.png)
+![Suppression d'un lot](images/image11.png)
 
 ---
 

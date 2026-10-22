@@ -12,6 +12,5 @@ Une fois mes lots complétés je peux générer des documents selon différents 
 
 Cliquer sur l'onglet documents dans le menu la
 
-![Capture étape 1](images/image13.png)
+![Capture étape 1](images/image5.png)
 
-![Capture étape 1](images/image14.png)

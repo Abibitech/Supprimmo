@@ -10,7 +10,7 @@
 
 Choisir le lot où ajouter des ouvrages et aller dans solution de base
 
-![Capture étape 1](images/image5.png)
+![Capture étape 1](images/image9.png)
 
 ### Étape 2
 
@@ -22,19 +22,19 @@ Cliquer sur le + puis bibliothèque d'ouvrages
 
 L'onglet ouvert est déjà sur le bon corps d'état, trouver l'ouvrage à ajouter en fonction de vos besoins dans les menus déroulants puis cliquer sur ajouter en bas à droite. La fenêtre reste ouverte pour pouvoir ajouter autant d'ouvrages que vous le souhaitez et fermez la lorsque vous avez terminé l'ajout
 
-![Capture étape 3](images/image7.png)
+![Capture étape 3](images/image14.png)
 
 ### Étape 4
 
 Les ouvrages sont rangés selon la catégorie mise dans la bibliothèque et insérer directement avec le prix de la bibliothèque
 
-![Capture étape 4](images/image8.png)
+![Capture étape 4](images/image1.png)
 
 ### Étape 5
 
 En double cliquant sur un ouvrage, vous pouvez modifier sa désignation, sa description ou bien encore la quantité
 
-![Capture étape 5](images/image9.png)
+![Capture étape 5](images/image4.png)
 
 ### Étape 6
 
@@ -46,10 +46,10 @@ En changeant pour aller dans l'onglet Détail du prix vous pouvez ajouter le pri
 
 Pour ajouter un prix plus efficacement vous pouvez cliquer sur un article et appuyer sur le bouton Prix/ratios dans les onglets au-dessus de tous les ouvrages
 
-![Capture étape 7](images/image11.png)
+![Capture étape 7](images/image3.png)
 
 ### Étape 8
 
 Dans cet onglet vous pouvez voir tous les prix déjà dans la base de données via d'autres projet et voir des statistiques du prix d'achat et du prix de vente et cliquer sur le prix statistique que vous souhaitez utiliser et appuyer sur le bouton en bas Utiliser dans l'étude
 
-![Capture étape 8](images/image12.png)
+![Capture étape 8](images/image13.png)
