@@ -19,7 +19,14 @@ streamlit.set_page_config(
 
 BASE_DIR = Path(__file__).resolve().parent
 
-streamlit.logo(str(BASE_DIR / "assets" / "Primmosens.png"), size="large")
+theme = streamlit.context.theme.type
+
+if theme == "dark":
+    logo = BASE_DIR / "assets" / "Primmosens.png"
+else:
+    logo = BASE_DIR / "assets" / "Primmosens_light.png"
+
+streamlit.logo(str(logo), size="large")
 
 homePage = streamlit.Page(
         home.print,

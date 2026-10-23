@@ -1,4 +1,8 @@
 import streamlit
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+PROCESSUS_DIR = BASE_DIR / "data" / "processus"
 
 def chooseWay(way):
     streamlit.session_state["selectedWay"] = way
@@ -6,8 +10,65 @@ def chooseWay(way):
 def backChosing():
     streamlit.session_state["selectedWay"] = None
 
+def getDocs(way):
+    folder = PROCESSUS_DIR / way
+    if not folder.exists():
+        return []
+
+    files = list(folder.glob("*.pdf"))
+    return sorted(files, key=lambda file: file.name.lower())
+
+def printDocs(way):
+    files = getDocs(way)
+    streamlit.subheader("Documents disponibles")
+    streamlit.caption(f"{len(files)} document(s) disponibles")
+    if not files:
+        streamlit.info("Aucun document disponible pour ce pôle.")
+        return
+
+    for file in files:
+        title = file.stem.replace("_", " ").capitalize()
+        with streamlit.container(border=True):
+            streamlit.subheader(f"{title}")
+            streamlit.caption(f"Fichier : {file.name}")
+            
+            col1, col2 = streamlit.columns(2)
+            with col1:
+                if streamlit.button("Visualiser",
+                                    key=f"view_{way}_{file.name}",
+                                    use_container_width=True,):
+                    streamlit.session_state["selectedPDF"] = str(file)
+
+            with col2:
+                streamlit.download_button(
+                    label="Télécharger le document",
+                    data=file.read_bytes(),
+                    file_name=file.name,
+                    mime="application/pdf",
+                    key=f"download_{way}_{file.name}",
+                    use_container_width=True,
+                    )
+    selectedPdf = streamlit.session_state.get("selectedPDF")
+    if selectedPdf:
+        filePdf = Path(selectedPdf)
+        if filePdf in files and filePdf.is_file():
+            streamlit.divider()
+            streamlit.subheader(f"{filePdf.stem}")
+            if streamlit.button("Fermer le document"):
+                streamlit.session_state["selectedPDF"] = None
+                streamlit.rerun()
+            streamlit.pdf(filePdf, height=700)
+
+
+
 def printHome():
-    streamlit.subheader("Choisissez un pôle")
+    streamlit.markdown(
+        """
+        <h3 style="text-align: center;">
+            Choisissez un pôle
+        </h3>
+        """, unsafe_allow_html=True
+    )
     col1, col2 = streamlit.columns(2, gap="medium")
 
     with col1:
@@ -45,14 +106,13 @@ def printWay(way):
         streamlit.header("Aménagement")
 
     streamlit.write("Retrouvez ici les processus et les documents associés à ce pole.")
-
-    with streamlit.container(border=True):
-        streamlit.subheader("Cartographie des processus")
-        streamlit.info("Les étapes et documents du processus seront intégrés prochainement")
+    streamlit.divider()
+    printDocs(way)
+  
 
 def print():
     streamlit.title("Documents et processus")
-    streamlit.write("Retrouver les processus et les documetns interne de Primmosens.")
+    streamlit.write("Retrouver les processus et les documents interne de Primmosens.")
     way = streamlit.session_state.get("selectedWay")
 
     if (way is None):
