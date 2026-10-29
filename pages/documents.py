@@ -1,5 +1,8 @@
+from functools import Placeholder
 import streamlit
 from pathlib import Path
+import pymupdf
+import unicodedata
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 PROCESSUS_DIR = BASE_DIR / "data" / "processus"
@@ -18,8 +21,56 @@ def getDocs(way):
     files = list(folder.glob("*.pdf"))
     return sorted(files, key=lambda file: file.name.lower())
 
+def extractText(path, date):
+    texts = []
+    with pymupdf.open(path) as doc:
+        for num, page in enumerate(doc, start=1):
+            text = page.get_text("text")
+            texts.append({
+                "page": num,
+                "text": text,
+                })
+    return texts
+
+def normalizeText(text):
+    text = text.casefold()
+    text = unicodedata.normalize("NFD", text)
+    return "".join(
+        char
+        for char in text
+        if unicodedata.category(char) != "Mn"
+    )
+
+def findDocs(files, search):
+    if not search.strip():
+        return files, {}
+    search = normalizeText(search.strip())
+    results = []
+    pagesFind = {}
+
+    for file in files:
+        name = normalizeText(file.stem.replace("_", " "))
+        try:
+            pages = extractText(str(file), file.stat().st_mtime_ns,)
+        except (OSError, ValueError, RuntimeError):
+            continue
+        isOk = []
+        for page in pages:
+            text = normalizeText(page["text"])
+            if search in text:
+                isOk.append(page["page"])
+        if search in name or isOk:
+            results.append(file)
+            pagesFind[str(file)] = isOk
+    return results, pagesFind
+
 def printDocs(way):
     files = getDocs(way)
+    search = streamlit.text_input("Rechercher un document",
+                           placeholder="Exemple : cartographie, contrat, procédure...",
+                           key=f"search_{way}",
+                           )
+    files, pagesFind = findDocs(files, search)
     streamlit.subheader("Documents disponibles")
     streamlit.caption(f"{len(files)} document(s) disponibles")
     if not files:
@@ -31,6 +82,10 @@ def printDocs(way):
         with streamlit.container(border=True):
             streamlit.subheader(f"{title}")
             streamlit.caption(f"Fichier : {file.name}")
+            pages = pagesFind.get(str(file), [])
+            if pages:
+                numbers = ", ".join(str(page) for page in pages)
+                streamlit.success(f"Terme trouvé dans les pages : {numbers}")
             
             col1, col2 = streamlit.columns(2)
             with col1:
