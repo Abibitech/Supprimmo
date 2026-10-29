@@ -91,7 +91,7 @@ def printDocs(way):
             with col1:
                 if streamlit.button("Visualiser",
                                     key=f"view_{way}_{file.name}",
-                                    use_container_width=True,):
+                                    width='stretch',):
                     streamlit.session_state["selectedPDF"] = str(file)
 
             with col2:
@@ -101,7 +101,7 @@ def printDocs(way):
                     file_name=file.name,
                     mime="application/pdf",
                     key=f"download_{way}_{file.name}",
-                    use_container_width=True,
+                    width="stretch",
                     )
     selectedPdf = streamlit.session_state.get("selectedPDF")
     if selectedPdf:
@@ -133,7 +133,7 @@ def printHome():
             streamlit.button(
                 "Accéder au pôle Construction",
                 key="construction",
-                use_container_width=True,
+                width="stretch",
                 on_click=chooseWay,
                 args=("construction",),
             )
@@ -144,7 +144,7 @@ def printHome():
             streamlit.button(
                 "Accéder au pôle Aménagement",
                 key="amenagement",
-                use_container_width=True,
+                width="stretch",
                 on_click=chooseWay,
                 args=("amenagement",),
             )

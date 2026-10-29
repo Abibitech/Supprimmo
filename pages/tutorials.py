@@ -130,7 +130,7 @@ def print():
                              key=f"open_{file}",
                              on_click=openTutorial,
                              args=(file,),
-                             use_container_width=True
+                             width='stretch'
                             
             )
     selectedPath = streamlit.session_state.get("selectedTutorial")
