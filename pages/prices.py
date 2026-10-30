@@ -1,9 +1,15 @@
 import hashlib
-
+import re
 import pandas as pd
 import streamlit as st
-
 from utils.excelReader import readExcel
+from decimal import Decimal, ROUND_HALF_UP
+from io import BytesIO
+from docx import Document
+from docx.enum.table import WD_TABLE_ALIGNMENT
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.shared import Cm, Pt
+from utils.wordExport import createSell
 
 
 def convertir_nombre(valeur):
@@ -80,6 +86,66 @@ def analyser_excel(data):
             })
 
     return pd.DataFrame(articles)
+
+def createRecapWord(recap):
+    doc = Document()
+    
+    sector = doc.sections[0]
+    sector.top_margin = Cm(2)
+    sector.bottom_margin = Cm(2)
+    sector.left_margin = Cm(2)
+    sector.right_margin = Cm(2)
+    
+    style = doc.styles["Normal"]
+    style.font.name = "Aptos"
+    style.font.size = Pt(10)
+    
+    title = doc.add_heading("RÉCAPITULATIF DES PRIX DE VENTE", level=1)
+    title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    
+    subTitle = doc.add_paragraph("Annexe financière au contrat")
+    subTitle.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    doc.add_paragraph("")
+    
+    tab = doc.add_table(rows=1, cols=3)
+    tab.style = "Table Grid"
+    tab.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    
+    headers = tab.rows[0].cells
+    headers[0].text = "Lot"
+    headers[1].text = "Désignation"
+    headers[2].text = "Montant HT"
+    
+    generalTotal = Decimal("0.00")
+    for _, lign in recap.iterrows():
+        cells = tab.add_row().cells
+        amount = Decimal(
+                str(lign["Total vente HT"])
+                ).quantize(
+                    Decimal("0.01"),
+                    rounding=ROUND_HALF_UP,)
+        cells[0].text = str(lign["Lot"])
+        cells[1].text = str(lign["Nom du lot"])
+        cells[2].text = euro(amount)
+        cells[2].paragraphs[0].alignment = (WD_ALIGN_PARAGRAPH.RIGHT)
+        generalTotal += amount
+
+    cells = tab.add_row().cells
+    cells[0].text = ""
+    cells[1].text = "TOTAL HT"
+    cells[2].text = euro(generalTotal)
+
+    for cell in cells:
+        for paragraph in cell.paragraphs:
+            for run in paragraph.runs:
+                run.bold = True
+    cells[2].paragraphs[0].alignment = (WD_ALIGN_PARAGRAPH.RIGHT)
+    doc.add_paragraph("")
+    doc.add_paragraph("Montants exprimés en euros hors taxes.")
+    file = BytesIO()
+    doc.save(file)
+    return file.getvalue()
+
 
 
 def print():
@@ -481,3 +547,44 @@ def print():
         "Écart avec l'objectif",
         euro(ecart),
     ) 
+
+    st.divider()
+
+    st.subheader("Export de la décomposition du prix")
+
+    with st.expander("Informations du document"):
+        nom_projet = st.text_input(
+            "Nom du projet",
+            key="nom_projet_export",
+        )
+
+        date_offre = st.date_input(
+            "Date de remise de l'offre",
+            format="DD/MM/YYYY",
+            key="date_offre_export",
+        )
+
+        date_validite = st.date_input(
+            "Date de validité de l'offre",
+            format="DD/MM/YYYY",
+            key="date_validite_export",
+        )
+
+        filen = re.sub(r'[\\/:*?"<>|]', "-", nom_projet).strip()
+        filen = filen or "Projet"
+
+        st.download_button(
+            "Télécharger la décomposition du prix",
+            data=createSell(
+                articles,
+                project=nom_projet,
+                offerDate=date_offre.strftime("%d/%m/%Y"),
+                validationDate=date_validite.strftime("%d/%m/%Y"),
+            ),
+            file_name=f"Annexe_Prix_{filen}.docx",
+            mime=(
+                "application/vnd.openxmlformats-officedocument."
+                "wordprocessingml.document"
+            ),
+            use_container_width=True,
+        )
